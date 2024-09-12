@@ -9,9 +9,9 @@ public:
     UnionFind(){}
     UnionFind(int a){
         n=st_size=a;
-        rank.assign(n,1);
-        parent.assign(n,0);
-        for(int i=0; i<n; i++) parent[i]=i;
+        rank.assign(n+1,1);
+        parent.assign(n+1,0);
+        for(int i=1; i<=n; i++) parent[i]=i;
     }
 
     int find(int x){
@@ -37,6 +37,6 @@ public:
 
     int size(){ return st_size; }
     void reset(){
-        for(int i=0; i<n; i++) { parent[i]=i; rank[i]=1; }
+        for(int i=1; i<=n; i++) { parent[i]=i; rank[i]=1; }
     }
 };
