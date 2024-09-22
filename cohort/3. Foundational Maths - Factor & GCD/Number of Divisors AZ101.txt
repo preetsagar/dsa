@@ -1,0 +1,13 @@
+D (Debug issues faced, what to keep in mind next time) ->
+
+for(int i=1; i*i<=n; i++){
+
+if(n%i==0){
+
+count++;
+
+if(i*i!=n) count++; <======
+
+}
+
+}

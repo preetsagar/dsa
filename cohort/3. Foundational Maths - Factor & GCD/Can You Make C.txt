@@ -1,0 +1,13 @@
+Concept -> Bezout's identity states that for any two integers a and b, their greatest common divisor (GCD) can be expressed as the smallest positive integer that can be expressed as a linear combination of a and b, that is:
+
+gcd(a,b)=ax+by
+
+gcd(a,b)=ax+by where x
+
+x and y
+
+y are integers.
+
+This shows that if the GCD of A and B divides C, then there exists a solution for the equation Ax+By=C
+
+Ax+By=C in integers.

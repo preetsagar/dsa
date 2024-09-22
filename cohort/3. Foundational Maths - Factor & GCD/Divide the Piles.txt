@@ -1,0 +1,1 @@
+C ( Concept/topic used in the problem) -> Starting variable value of gcd can be zero
