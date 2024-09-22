@@ -1,0 +1,13 @@
+C ( Concept/topic used in the problem) ->
+
+Steps to Check:
+
+
+
+1. Simplify the Fraction: If the fraction is not in its simplest form, simplify it by dividing the numerator and the denominator by their greatest common divisor (GCD).
+
+2. Factorize the Denominator:
+
+• If the simplified denominator can be expressed as a product of only 2’s and 5’s (i.e., 2^a \times 5^b, where a and b are non-negative integers), the decimal will terminate.
+
+• If the denominator has any other prime factors besides 2 and 5, the decimal will repeat.

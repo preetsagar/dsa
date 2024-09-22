@@ -1,0 +1,17 @@
+Concept -> Fermat's little theorem
+
+A^(B^C)
+B^C = x(p-1) + y => y = (B^C)%(p-1)
+A^(B^C) => A^(x(p-1) + y) = A^ y => A^((B^C)%(p-1))
+
+
+
+Debug -> edge case and fast io
+
+if (b == 0 && c != 0) {
+cout << '1' << '\n';
+}
+
+else if (a % p == 0 || a == 0) {
+cout << "0\n";
+}
