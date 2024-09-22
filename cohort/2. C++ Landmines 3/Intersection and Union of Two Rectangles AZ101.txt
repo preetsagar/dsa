@@ -1,0 +1,1 @@
+C ( Concept/topic used in the problem) -> Separate the x-axis and y-axis, and then solve them separately => The question boils down to finding the intersection of x-axis and y-axis
