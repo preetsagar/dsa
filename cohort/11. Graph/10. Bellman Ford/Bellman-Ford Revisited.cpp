@@ -26,7 +26,7 @@ signed main() {
 
     for(auto j:edges){
         int u=j.first, v=j.second.first, w=j.second.second;
-        if(dis[u]!=1e8 && dis[v]!=1e18 && dis[v] > dis[u]+w){
+        if(dis[u]!=1e8 && dis[v]!=1e18 && dis[v] > dis[u]+w){   // Check for negative cycles and if reachable(1e18 is unreachable)
             cout<<-1;
             return 0;
         }
