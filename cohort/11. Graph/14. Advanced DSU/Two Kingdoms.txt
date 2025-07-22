@@ -1,0 +1,174 @@
+Hint 1
+Compressing the components of a single color is easy, how to we decide on which pair of color will give us optimal? How many Pairs of colors can potentially give the answer?
+
+
+Hint 2
+We only have O(N*M) number of pairs of color to check, which occur as a neighbor once. How do you check these pairs efficiently?
+
+
+Solution Approach
+Solution 1:
+
+We maintain a UnionFind with Rollback. First Compress all Components of the Same Colour. Then to check each pair of Potential colors, add those edges, maintaining the Components Size in a multiset, to find the largest component in the UnionFind. To removes these, rollback the Union Find. There are in total O(N*M) edges across all color pairs. So the total time complexity would be O(N*M*log(N*M)).
+
+ 
+
+Solution 2:
+
+We do a BFS for every pair of colors that are neighbors from a cell. To restrict the BFS to O(N*M), we can make sure that each edge is covered in BFS only once! You can draw and check that you will visit the maximum Connected Set at least once.
+
+
+
+
+#include<bits/stdc++.h>
+//#pragma GCC optimize("Ofast")
+//#pragma GCC optimize ("unroll-loops")
+//#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+//#pragma comment(linker, "/stack:200000000")
+using namespace std;
+#define F first
+#define S second
+#define EB emplace_back
+#define MP make_pair
+#define all(o) (o).begin(), (o).end()
+#define mset(m,v) memset(m,v,sizeof(m))
+#define fr(i,n) for(lli i=0;i<(n);++i)
+#define rep(i,a,b) for(lli i=a;i<=b;++i)
+#define per(i,a,b) for(lli i=a;i>=b;i--)
+#define remin(a,b) (a=min((a),(b)))
+#define remax(a,b) (a=max((a),(b))) 
+#define sz(x) (lli)(x).size()
+#define endl '\n'
+typedef long long lli;        typedef long double ld;
+typedef pair<lli,lli> ii;     typedef vector<lli> vi;
+typedef vector<ii> vii;       typedef vector<vi> graph;
+long long MOD=1000000007;     long double EPS=1e-9;
+#ifndef ONLINE_JUDGE
+#define debarr(a,n)cerr<<#a<<":";for(int i=0;i<n;i++)cerr<<a[i]<<" ";cerr<<endl;
+#define debmat(mat,row,col)cerr<<#mat<<":\n";for(int i=0;i<row;i++){for(int j=0;j<col;j++)cerr<<mat[i][j]<<" ";cerr<<endl;}
+#define pr(...)dbs(#__VA_ARGS__,__VA_ARGS__)
+template<class S,class T>ostream &operator<<(ostream &os,const pair<S,T> &p){return os<<"("<<p.first<<","<<p.second<<")";}
+template<class T>ostream &operator<<(ostream &os,const vector<T> &p){os<<"[";for(auto&it:p)os<<it<<" ";return os<<"]";}
+template<class T>ostream &operator<<(ostream &os,const set<T>&p){os<<"[";for(auto&it:p)os<<it<<" ";return os<<"]";}
+template<class T>ostream &operator<<(ostream &os,const multiset<T>&p){os<<"[";for(auto&it:p)os<<it<<" ";return os<<"]";}
+template<class S,class T>ostream &operator<<(ostream &os,const map<S,T>&p){os<<"[";for(auto&it:p)os<<it<<" ";return os<<"]";}
+template<class T>void dbs(string str,T t){cerr<<str<<":"<<t<<"\n";}
+template<class T,class...S>void dbs(string str,T t,S... s){int idx=str.find(',');cerr<<str.substr(0,idx)<<":"<<t<<",";dbs(str.substr(idx+1),s...);}
+#else
+#define pr(...){}
+#define debarr(a,n){}
+#define debmat(mat,row,col){}
+#endif
+lli binpow(lli b,lli p,lli mod){lli ans=1;b%=mod;for(;p;p>>=1){if(p&1)ans=ans*b%mod;b=b*b%mod;}return ans;}
+
+void pre(){
+
+}
+
+int uf[1000100];
+int rankk[1000100];
+multiset<int> compSize;
+void init(){
+    compSize.clear();
+    fr(i,1000001){uf[i]=i;rankk[i]=1;compSize.insert(1);}
+}
+int get(int x){
+    while(x!=uf[x])x=uf[x];return x;
+}
+vector<pair<int,int>> st;
+void merge(int x,int y){
+    x=get(x);y=get(y);
+    if(x==y)return;
+    if(rankk[x] < rankk[y])swap(x,y);
+    compSize.erase(compSize.find(rankk[x]));
+    compSize.erase(compSize.find(rankk[y]));
+    rankk[x]+=rankk[y];
+    uf[y]=x;
+    st.EB(y,x);
+    compSize.insert(rankk[x]);   
+}
+void revert(){
+    while(!st.empty()){
+        int y = st.back().F;
+        int x = st.back().S;
+        st.pop_back();
+        compSize.erase(compSize.find(rankk[x]));
+        uf[y]=y;
+        rankk[x]-=rankk[y];
+        compSize.insert(rankk[x]);
+        compSize.insert(rankk[y]);
+    }
+}
+int getMax(){
+    auto it=compSize.end();it--;
+    return *it;
+}
+
+
+int n,m;
+bool check(int i,int j){
+    if(i<n&&i>=0&&j<m&&j>=0)return 1;
+    return 0;
+}
+int dx[] = {1,0,-1,0};
+int dy[] = {0,1,0,-1};
+
+int arr[1001][1001];
+int node[1001][1001];
+
+vector<pair<ii,ii>> edges;
+
+void solve(){
+    cin>>n>>m;
+    init();
+    int cnt=1;
+    fr(i,n)fr(j,m){cin>>arr[i][j];node[i][j]=cnt++;}
+    fr(i,n)fr(j,m){
+        fr(k,2){
+            int xx = i+dx[k];
+            int yy = j+dy[k];
+            if(check(xx,yy)){
+                int cc1 = arr[i][j];
+                int cc2 = arr[xx][yy];
+                if(cc1>cc2)swap(cc1,cc2);
+                if(cc1!=cc2){
+                    edges.EB(MP(MP(cc1,cc2),MP(node[i][j],node[xx][yy])));
+                }else{
+                    merge(node[i][j],node[xx][yy]);
+                } 
+            }
+        }
+    }
+    st.clear();
+    sort(all(edges));
+    int ans=getMax();
+    for(int i=0;i<edges.size();i++){
+        int j=i;
+        while(j<edges.size() && edges[i].F==edges[j].F){
+            merge(edges[j].S.F,edges[j].S.S);
+            j++;
+        }
+        remax(ans,getMax());
+        revert();
+        i=j-1;
+    }
+    cout << ans << endl; 
+}
+
+signed main(){
+    ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+    //freopen("in.txt","r",stdin);
+    //freopen("out.txt","w",stdout);
+    //cout<<fixed<<setprecision(15);
+    //clock_t begin = clock();
+    pre();lli _t=1;//cin>>_t;
+    for(lli i=1;i<=_t;i++){
+        //cout<<"Case #"<<i<<": ";
+        solve();
+    }
+    // clock_t end = clock();double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;cerr << elapsed_secs;
+}
+
+
+
+
