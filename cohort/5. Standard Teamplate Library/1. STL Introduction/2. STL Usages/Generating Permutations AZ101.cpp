@@ -18,26 +18,26 @@ using namespace std;
 using namespace std;
 
 int n;
-multiset<int> mt;
-vector<int> ans;
+vector<int> perm;
+vector<bool> used(20, 0);
 
 void solve(int i){
     if(i==n){
-        for(int i:ans) cout<<i<<" "; cout<<'\n';
+        for(int x : perm) cout<<x<<" ";
+        cout<<'\n';
         return;
     }
+
     for(int j=1; j<=n; j++){
-        if(mt.find(j)==mt.end()){
-            mt.insert(j);
-            ans.push_back(j);
+        if(!used[j]){
+            used[j] = true;
+            perm.push_back(j);
             solve(i+1);
-            mt.erase(mt.find(j));
-            ans.pop_back();
+            used[j] = false;
+            perm.pop_back();
         }
     }
 }
-
-
 
 int main() {
     cin>>n;
