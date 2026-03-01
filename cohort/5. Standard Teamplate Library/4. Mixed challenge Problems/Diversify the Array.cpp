@@ -22,7 +22,7 @@ signed main() {
             }
             else break;
         }
-        while(!pq.empty()&&pq.top()>1){
+        while(!pq.empty()){
             int a=pq.top();pq.pop();
             ans-=(a*(a-1))/2;
         }
