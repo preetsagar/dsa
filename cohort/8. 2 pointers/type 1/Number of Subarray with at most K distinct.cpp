@@ -1,34 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> freq(1000100,0);
+#define int long long
 
-int main(){
-    int t; cin>>t; while(t--){
-        int n,k; cin>>n>>k;
-        vector<int>arr(n);
-        for(int i=0; i<n; i++) cin>>arr[i];
+int n,k;
+vector<int> arr;
 
-        int tail=0,head=-1,distElement=0;
-        long long ans=0;
-        while(tail<n){
-            while(head+1<n&&(distElement<k||freq[arr[head+1]]>0)){
-                head++;
-                if(freq[arr[head]]==0) distElement++;
-                freq[arr[head]]++;
-            }
-            ans+=(head-tail+1);
-            if(tail>head){
-                tail++;
-                head=tail-1;
-            }
-            else{
-                freq[arr[tail]]--;
-                if(freq[arr[tail]]==0) distElement--;
-                tail++;
-            }
+int solve(){
+    int tail=0, head=-1;
+    int ans=0;
+    map<int, int> mp;
+    while(tail <n){
+        while(head+1 < n && (mp.find(arr[head+1])!=mp.end() || mp.size()<k)){
+            head++;
+            mp[arr[head]]++;
         }
-        cout<<ans<<"\n";
+        ans += (head-tail+1);
+        if(tail > head){
+            tail++;
+            head = tail-1;
+        }else{
+            mp[arr[tail]]--;
+            if(mp[arr[tail]]==0) mp.erase(arr[tail]);
+            tail++;
+        }
+    }
+    return ans;
+}
+
+signed main() {
+    int t; cin>>t; while(t--){
+        cin>>n>>k;
+        arr.resize(n);
+        for(int i=0; i<n; i++) cin>>arr[i];
+        cout<<solve()<<"\n";
     }
     return 0;
 }
