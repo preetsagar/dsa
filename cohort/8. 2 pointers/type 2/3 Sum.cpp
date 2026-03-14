@@ -3,33 +3,29 @@ using namespace std;
 
 #define int long long
 
-signed main(){
-    int t; cin>>t; while(t--){
-        int n,sum; cin>>n>>sum;
-        vector<int> arr(n);
-        for(int i=0; i<n; i++) cin>>arr[i];
-        sort(arr.begin(),arr.end());
-        int ans=LLONG_MAX;
+int n,sum;
+vector<int> arr;
 
-        for(int i=1; i<n-1; i++){
-            int l=0,r=n-1;
-            while(l<i&&r>i){
-                int t=arr[l]+arr[i]+arr[r];
-                if(t==sum){
-                    ans=0;break;
-                }
-                else if(t>=sum){
-                    ans=min(ans,abs(t-sum));
-                    r--;
-                }
-                else{
-                    ans=min(ans,abs(t-sum));
-                    l++;
-                }
-            }
+int solve(){
+    int ans = LONG_MAX;
+    for(int j=0; j<n; j++){
+        int i=0, k=n-1;
+        while(i<j && j<k){
+            ans = min(ans, abs(arr[i]+arr[j]+arr[k] - sum));
+            if(arr[i]+arr[j]+arr[k] > sum) k--;
+            else i++;
         }
+    }
+    return ans;
+}
 
-        cout<<ans<<"\n";
+signed main() {
+    int t; cin>>t; while(t--){
+        cin>>n>>sum;
+        arr.resize(n);
+        for(int i=0; i<n; i++) cin>>arr[i];
+        sort(arr.begin(), arr.end());
+        cout<<solve()<<"\n";
     }
     return 0;
 }
