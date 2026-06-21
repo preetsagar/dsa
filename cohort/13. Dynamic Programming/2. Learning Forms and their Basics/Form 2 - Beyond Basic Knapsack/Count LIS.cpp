@@ -3,51 +3,62 @@ using namespace std;
 
 #define int long long
 
-int MOD = 1e9+7;
+int t,n;
+vector<int> arr;
+int dp[1100], countDp[1100];
+
+int mod = 1e9+7;
+
+int solve(int i){
+    if(dp[i]!=-1) return dp[i];
+
+    int ans = 1;
+    for(int j=0; j<i; j++){
+        if(arr[i] > arr[j]){
+            ans = max(ans, solve(j)+1);
+        }
+    }
+    return dp[i] = ans;
+}
+
+int count(int i){
+    if(solve(i)==1) return 1;
+
+    if(countDp[i]!=-1) return countDp[i];
+
+    int ans = 0;
+    for(int j=0; j<i; j++){
+        if(arr[i] > arr[j] && solve(i)==solve(j)+1){
+            ans = (ans + count(j)) % mod;
+        }
+    }
+    return countDp[i] = ans;
+}
+
 
 signed main() {
-    int t; cin>>t; while(t--){
-        int n; cin>>n;
-        int arr[1100];
+    cin>>t; while(t--){
+        cin>>n;
+        arr.resize(n);
         for(int i=0; i<n; i++) cin>>arr[i];
+        memset(dp, -1, sizeof(dp));
+        memset(countDp, -1, sizeof(countDp));
+        for(int i=0; i<n; i++) solve(i);
 
-        int dp[1100];
-        int countLis[1100];
+        int LIS=0;
+        for(int i=0; i<n; i++) LIS = max(LIS, dp[i]);
 
-        for(int i = 0; i < n; i++){
-            dp[i] = 1;
-            countLis[i] = 1;
+        int ans=0;
+        for(int i=0; i<n; i++){
+            if(dp[i]==LIS){
+                ans += count(i);
+            }
         }
         
-        dp[0] = 1;
-        countLis[0] = 1;
+        // for(int i=0; i<n; i++) cout<<dp[i]<<" ";
+        // cout<<"\n";
 
-        for(int i=1; i<n; i++){
-            dp[i] = 1;
-            for(int j=0; j<i; j++){
-                if(arr[i] > arr[j]){
-                    if(dp[j]+1 > dp[i]){
-                        countLis[i] = countLis[j];
-                        dp[i] = dp[j]+1;
-                    }
-                    else if(dp[j]+1 == dp[i]){
-                        countLis[i] = (countLis[i] + countLis[j])%MOD;
-                    }
-                }
-            }
-        }
-
-        int ans = 0, len=0;
-        for(int i=0; i<n; i++){
-            if(len < dp[i]){
-                len = dp[i];
-                ans = countLis[i];
-            }
-            else if(len == dp[i]){
-                ans = (ans + countLis[i])%MOD;
-            }
-        }
-        cout<<ans%MOD<<"\n";
+        cout<<ans%mod<<"\n";
     }
     return 0;
 }
