@@ -1,64 +1,69 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define int long long
+#define ll int64_t
+#define endl '\n'
+
+const int mx = 2e5 + 10;
 
 int n, a, b;
-vector<int> arr, dis;
-vector<bool> vis, value_used;
-map<int, vector<int>> same_value_indices;
-
-void dijkstra(int src) {
-    priority_queue<pair<int, int>> pq;
-    dis[src] = 0;
-    pq.push({0, src});
-
-    while (!pq.empty()) {
-        auto [d, u] = pq.top(); pq.pop();
-        if (vis[u]) continue;
-        vis[u] = true;
-
-        if (!value_used[arr[u]]) {  // NOTE If we haven't used this value yet
-            for (int v : same_value_indices[arr[u]]) {
-                if (dis[v] > dis[u] + a) {
-                    dis[v] = dis[u] + a;
-                    pq.push({-dis[v], v});
-                }
-            }
-            value_used[arr[u]] = true;
-        }
-
-        // Move to adjacent indices
-        if (u > 1 && dis[u - 1] > dis[u] + b) {
-            dis[u - 1] = dis[u] + b;
-            pq.push({-dis[u - 1], u - 1});
-        }
-        if (u < n && dis[u + 1] > dis[u] + b) {
-            dis[u + 1] = dis[u] + b;
-            pq.push({-dis[u + 1], u + 1});
-        }
-    }
+int arr[mx];
+vector<vector<array<int, 2>>> adj;
+map<int, vector<int>> sadj; // same value index list.
+vector<ll> dist;
+void dijktra(int src) { // ~O(NlogN)
+	dist.assign(2 * n + 10, 1e18); // now we have 2*n nodes.
+	priority_queue<array<ll, 2>, vector<array<ll, 2>>, greater<array<ll, 2> >> pq;
+	pq.push({0, src});
+	dist[src] = 0;
+	while (!pq.empty()) {
+		auto x = pq.top();
+		pq.pop();
+		int i = x[1];
+		if (x[0] > dist[i])continue;
+		for (auto y : adj[i]) {
+			int j = y[0], w = y[1];
+			if (dist[j] > dist[i] + w) {
+				dist[j] = dist[i] + w;
+				pq.push({dist[j], j});
+			}
+		}
+	}
 }
+void solve() {
+	cin >> n;
+	cin >> a >> b;
+	adj.assign(2 * n + 10, vector<array<int, 2>>());
+	for (int i = 1; i <= n; i++) {
+		cin >> arr[i];
+		sadj[arr[i]].push_back(i);
+		if (i != n)adj[i].push_back({i + 1, b});
+		if (i != 1)adj[i].push_back({i - 1, b});
+	}
+	int super_node = n + 1;
+	for (auto x : sadj) {
+		for (auto i : x.second) {
+			adj[super_node].push_back({i, a});
+			adj[i].push_back({super_node, 0});
+		}
+		super_node++;
+	}// now we have at max 2*n nodes in the graph and 4*n-2 edges.
+	int src;
+	cin >> src;
+	dijktra(src);
+	for (int i = 1; i <= n; i++)cout << dist[i] << " ";
+}
+int main() {
+	ios_base :: sync_with_stdio(0);
+	cin.tie(nullptr); cout.tie(nullptr);
 
-signed main() {
-    cin >> n >> a >> b;
-    arr.resize(n + 1);
-    dis.assign(n + 1, 1e18);
-    vis.assign(n + 1, false);
-    value_used.assign(101, false);  // values in arr[i] are from 1 to 100
-
-    for (int i = 1; i <= n; ++i) {
-        cin >> arr[i];
-        same_value_indices[arr[i]].push_back(i);
-    }
-
-    int src;
-    cin >> src;
-
-    dijkstra(src);
-
-    for (int i = 1; i <= n; ++i)
-        cout << dis[i] << " ";
-
-    return 0;
+	int t = 1;
+	// int i = 1;
+	// cin >> t;
+	while (t--) {
+		// cout << "Case #" << i << ": ";
+		solve();
+		// i++;
+	}
+	return 0;
 }
