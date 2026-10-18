@@ -4,21 +4,17 @@ using namespace std;
 int n,k;
 vector<int> arr;
 
-int solve(int i){
-    if(arr.size()==1) return arr[0];
-
-    int s=arr.size();
-    int kill = (i+k)%s;
-    arr.erase(arr.begin()+kill);
-    return solve(kill);
+int solve(int n, int k){
+    if(n==1) return 0;
+    
+    int whoWillSurvive = solve(n-1, k);
+    int y = (whoWillSurvive + k)%n;
+    
+    return y;
 }
 
 int main() {
     cin>>n>>k;
-    for(int i=1; i<=n; i++) arr.push_back(i);
-
-    k--;
-    cout<<solve(0);
-
+    cout<<solve(n,k)+1;
     return 0;
 }
