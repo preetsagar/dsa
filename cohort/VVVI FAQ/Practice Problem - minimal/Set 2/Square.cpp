@@ -8,54 +8,29 @@ vector<long long> ds;
 // Instead of checking all 4! = 24 permutations, only 3 distinct vertex arrangements are enough (others are just rotations/reversals).
 // The cleanest solution is to compute the 6 pairwise distances once, sort them, and verify: first 4 distances are equal and non-zero (sides), last 2 are equal (diagonals). This removes permutations entirely.
 
-long long dist(vector<long long> &a, vector<long long> &b){
-    long long dx = a[0] - b[0];
-    long long dy = a[1] - b[1];
+long long dist(vector<long long> a, vector<long long> b){
+    long long dx = a[0]-b[0];
+    long long dy = a[1]-b[1];
+
     return dx*dx + dy*dy;
-}
-
-bool isValid(vector<vector<long long>> &v){
-
-    int A = ds[0];
-    int B = ds[1];
-    int C = ds[2];
-    int D = ds[3];
-
-    long long AB = dist(v[A], v[B]);
-    long long BC = dist(v[B], v[C]);
-    long long CD = dist(v[C], v[D]);
-    long long DA = dist(v[D], v[A]);
-
-    long long AC = dist(v[A], v[C]);
-    long long BD = dist(v[B], v[D]);
-
-    return (AB > 0 &&
-            AB == BC &&
-            BC == CD &&
-            CD == DA &&
-            AC == BD);
-}
-
-bool solve(vector<vector<long long>> &v, int mask){
-    if(ds.size() == 4){
-        return isValid(v);
-    }
-
-    for(int j=0; j<4; j++){
-        if((mask & (1<<j)) == 0){
-            ds.push_back(j);
-            if(solve(v, mask | (1<<j)))
-                return true;
-            ds.pop_back();
-        }
-    }
-    return false;
 }
 
 bool isValidSquare(vector<vector<long long>> &v)
 {
-    if(solve(v, 0)) return true;
-    return false;
+    long long AB = dist(v[0], v[1]);
+    long long BC = dist(v[1], v[2]);
+    long long CD = dist(v[2], v[3]);
+    long long AD = dist(v[0], v[3]);
+    long long AC = dist(v[0], v[2]);
+    long long BD = dist(v[1], v[3]);
+
+    vector<long long> dis = {AB, BC, CD, AD, AC, BD};
+    sort(dis.begin(), dis.end());
+
+    // for(int i:dis) cout<<i<<" "; cout<<"\n";
+
+    if(dis[0] > 0 && (dis[0]==dis[1] && dis[1]==dis[2] && dis[2]==dis[3]) && dis[4]==dis[5]) return 1;
+    else return 0;
 }
 
 
