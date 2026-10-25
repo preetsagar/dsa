@@ -1,0 +1,28 @@
+@startuml
+title Notification System — Observer Pattern
+left to right direction
+
+interface Observable {
+  +addObserver()
+  +removeObserver()
+  +notifyObservers()
+}
+
+interface Observer {
+  +update()
+}
+
+class IphoneObservable {
+  +setCount()
+}
+
+class EmailObserver
+class MessageObserver
+
+IphoneObservable ..|> Observable
+EmailObserver ..|> Observer
+MessageObserver ..|> Observer
+
+IphoneObservable "1" o--> "many" Observer : notifies
+Observer --> Observable : pulls message
+@enduml

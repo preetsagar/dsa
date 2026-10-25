@@ -11,7 +11,7 @@ public class MessageObserver implements Observer {
     
     @Override
     public void update() {
-        System.out.println("MessageObserver: Received notification");
+        System.out.println("MessageObserver: Received notification " + observable.getNotificationMessage());
     }
     
 }

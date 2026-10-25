@@ -12,7 +12,7 @@ public class EmailObserver implements Observer {
 
     @Override
     public void update() {
-        System.out.println("EmailObserver: Received notification");
+        System.out.println("EmailObserver: Received notification " + observable.getNotificationMessage());
     }
     
 }
