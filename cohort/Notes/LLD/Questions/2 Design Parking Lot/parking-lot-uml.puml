@@ -1,0 +1,66 @@
+@startuml
+title Parking Lot — Class Diagram
+left to right direction
+
+class ParkingLotMain
+
+class EntryGate {
+  +getParkingSpot(vehicle)
+  +parkVehicle(vehicle, parkingSpot)
+}
+
+class ExitGate {
+  +calculatePrice(ticket)
+  +pay(bill, payment, ticket)
+}
+
+class ParkingSpotManagerFactory {
+  +getParkingSpotManager(vehicleType)
+}
+
+class ParkingSpotManager {
+  +addParkingSpot(parkingSpot)
+  +removeParkingSpot(parkingSpot)
+  +findAvailableParkingSpot()
+}
+
+class ParkingSpot {
+  +assignVehicle()
+  +freeParkingSpot()
+}
+
+class Vehicle
+
+class Ticket {
+  +isPaid()
+  +markPaid()
+}
+
+enum VehicleType {
+  TWO_WHEELER
+  FOUR_WHEELER
+}
+
+interface Payment {
+  +pay(bill)
+}
+
+class CardPayment
+class GpayPayment
+
+ParkingLotMain --> EntryGate : uses
+ParkingLotMain --> ExitGate : uses
+EntryGate --> ParkingSpotManagerFactory : selects manager
+ParkingSpotManagerFactory "1" o-- "2" ParkingSpotManager : manages by type
+ParkingSpotManager "1" o-- "many" ParkingSpot : manages
+EntryGate --> Vehicle : parks
+EntryGate --> Ticket : creates
+Ticket --> Vehicle : records
+Ticket --> ParkingSpot : records
+ExitGate --> Ticket : processes
+ExitGate --> Payment : delegates payment
+Payment <|.. CardPayment
+Payment <|.. GpayPayment
+Vehicle --> VehicleType
+ParkingSpot --> VehicleType
+@enduml

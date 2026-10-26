@@ -1,0 +1,16 @@
+Review the full code in “[PROJECT FOLDER]” and create two documentation files inside that folder:
+
+1. `README.md` — Match the structure and interview-focused style of `1-DesignNotificationSystem/REVISION.md`. Include:
+   - A 30-second explanation of the design
+   - A table mapping design roles to classes
+   - A step-by-step flow
+   - Patterns used and why
+   - Important implementation details
+   - Common interview follow-up questions with short answers
+   - A 15-second explanation
+   - An embedded Mermaid class diagram
+   - A link to the standalone diagram file
+
+2. `[project-name]-uml.puml` — Create the same class diagram in PlantUML format.
+
+Base both documents on the actual source code. Use the real class names, methods, and relationships. Clearly call out unfinished or incorrect behavior instead of describing it as complete. Keep the documentation concise and consistent with the reference style. Do not modify application code.
